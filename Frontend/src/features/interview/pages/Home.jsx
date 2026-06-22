@@ -1,4 +1,7 @@
+import { useInterview } from '../hooks/useInterview'
 import '../style/home.scss'
+import { useState, useRef} from 'react'
+import {useNavigate} from 'react-router'
 
 const DocumentIcon = () => (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -23,6 +26,26 @@ const PeopleIcon = () => (
 )
 
 const Home = () => {
+    const {loading, generateReport} = useInterview();
+    const [jobDescription, setJobDescription] = useState("");
+    const [selfDescription, setSelfDescription] = useState("");
+    const resumeInputRef = useRef();
+    const navigate = useNavigate();
+
+    const handleGenerateReport = async() => {
+        const resumeFile = resumeInputRef.current.files[0];
+        const data = await generateReport({ jobDescription, selfDescription, resumeFile });
+        console.log(data)
+        navigate(`/interview/${data._id}`)
+
+    }
+    if(loading){
+        return (<main className="loading-screen"><h1>Loading Your Interview Plan...</h1></main>)
+    }
+
+
+
+
     return (
         <main className="home">
             <div className="home__page">
@@ -54,6 +77,7 @@ const Home = () => {
                             <span className="required-badge">Required</span>
                         </div>
                         <textarea
+                            onChange={(e) => {setJobDescription(e.target.value)}}
                             id="jobDescription"
                             name="jobDescription"
                             placeholder="Paste the full job description here... (Responsibilities, Requirements, Tech Stack)"
@@ -71,7 +95,7 @@ const Home = () => {
                                 <strong>Click to upload or drag and drop</strong>
                                 <small>PDF, DOCX up to 10MB</small>
                             </label>
-                            <input id="resume" name="resume" type="file" accept=".pdf,.doc,.docx" hidden />
+                            <input ref={resumeInputRef} id="resume" name="resume" type="file" accept=".pdf,.doc,.docx" hidden />
                         </section>
 
                         <section className="form-card form-card--self">
@@ -81,6 +105,7 @@ const Home = () => {
                                 </label>
                             </div>
                             <textarea
+                                onChange={(e) => {setSelfDescription(e.target.value)}}
                                 id="selfDescription"
                                 name="selfDescription"
                                 placeholder="Add extra context: specific accomplishments, target salary range, or areas you want to highlight..."
@@ -106,7 +131,7 @@ const Home = () => {
                         <span><strong>AI-Powered</strong> Strategy Generation Quick</span>
                     </div>
 
-                    <button className="generate-button" type="button">
+                    <button onClick={handleGenerateReport} className="generate-button" type="button">
                         <span aria-hidden="true">★</span> Generate My Interview Strategy
                     </button>
                 </form>

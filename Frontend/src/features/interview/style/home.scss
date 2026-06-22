@@ -7,11 +7,9 @@ $border: #2b323b;
 $muted: #838994;
 
 .home {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
     background:
         radial-gradient(circle at 50% 8%, rgba(197, 53, 88, 0.055), transparent 27rem),
         $page;
@@ -21,7 +19,7 @@ $muted: #838994;
     *, *::before, *::after { box-sizing: border-box; }
 
     &__page {
-        width: min(100% - 40px, 760px);
+        width: min(100% - 40px, 900px);
         margin: 0 auto;
         flex: 0 1 auto;
         padding: 0 0 14px;
@@ -33,7 +31,7 @@ $muted: #838994;
 .brand {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 7px;
     min-height: 38px;
     font-size: 17px;
     font-weight: 750;
@@ -123,13 +121,13 @@ $muted: #838994;
     gap: 12px;
     margin-bottom: 9px;
 
-    label { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 750; }
+    label { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; }
 
     &__icon {
         display: inline-flex;
         color: $accent-light;
 
-        svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
         &--people svg { width: 14px; }
     }
 }
@@ -160,7 +158,7 @@ $muted: #838994;
 
     &::placeholder {
         color: #747b86;
-        font-size: 10.8px;
+        font-size: 15px;
         opacity: 1;
     }
     &:focus { border-color: $accent-light; box-shadow: 0 0 0 3px rgba(197, 53, 88, .1); }
@@ -199,7 +197,6 @@ $muted: #838994;
 .analysis-card {
     position: relative;
     min-height: 80px;
-    overflow: hidden;
     border: 1px solid rgba(214, 105, 129, .46);
     border-radius: 6px;
     background:
@@ -286,11 +283,14 @@ $muted: #838994;
 .home-footer {
     border: 0;
     background: transparent;
+    width: 100%;
 
     &__inner {
-        width: min(100% - 40px, 760px);
+        max-width: 900px;
+        width: calc(100% - 40px);
+        margin: 0 auto;
+       
         min-height: 38px;
-        margin: auto;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -302,14 +302,98 @@ $muted: #838994;
         a:hover { color: white; }
     }
 }
+.recent-reports {
+    width: 70%;
+    margin-top: 60px;
+}
 
-@media (max-width: 760px) {
+.recent-reports__header {
+    margin-bottom: 20px;
+
+    h2 {
+        margin: 0;
+        font-size: 28px;
+        color: #f4f3f5;
+    }
+}
+
+.recent-reports__eyebrow {
+    margin-bottom: 8px;
+    color: $accent-light;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+}
+
+.report-card {
+    padding: 18px;
+    border-radius: 10px;
+    background: $surface;
+    border: 1px solid $border;
+    cursor: pointer;
+    transition: .25s ease;
+
+    &:hover {
+        border-color: $accent-light;
+        transform: translateY(-4px);
+    }
+
+    h3 {
+        margin: 12px 0;
+        font-size: 15px;
+        color: white;
+    }
+}
+.report-card__match {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.report-card__score {
+    font-size: 18px;
+    font-weight: 800;
+    color: #f096aa;
+}
+
+.report-card__level {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+
+.report-card__level.high {
+    background: rgba(0, 255, 120, .12);
+    color: #48ff9a;
+}
+
+.report-card__level.medium {
+    background: rgba(255, 193, 7, .12);
+    color: #ffd257;
+}
+
+.report-card__level.low {
+    background: rgba(255, 87, 87, .12);
+    color: #ff7b7b;
+}
+
+@media (max-width: 768px) {
     .home__page { width: min(100% - 30px, 560px); }
     .brand {
         position: fixed;
         z-index: 10;
         top: 12px;
-        left: max(15px, calc((100vw - 560px) / 2));
+        left: max(15px, calc((100vw - 900px) / 2));
         min-height: 38px;
     }
     .hero { padding: 12px 0 18px; }

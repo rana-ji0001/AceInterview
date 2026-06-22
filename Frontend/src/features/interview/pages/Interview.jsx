@@ -1,14 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import '../style/interview.scss'
-import { useInterview } from '../hooks/useinterview'
+import { useInterview } from '../hooks/useInterview'
+import { useParams } from 'react-router'
 
 
 
-const sections = [
-    { id: 'technical', label: 'Technical Questions', eyebrow: 'Technical assessment' },
-    { id: 'behavioral', label: 'Behavioral Questions', eyebrow: 'Behavioral assessment' },
-    { id: 'roadmap', label: 'Preparation Roadmap', eyebrow: '5-day action plan' },
-]
+
 
 const QuestionList = ({ questions }) => (
     <div className="question-list">
@@ -48,9 +45,25 @@ const Roadmap = ({ plan }) => (
 )
 
 const Interview = () => {
+    const { interviewId } = useParams();
+    const { report, loading, getReportById } = useInterview();
     const [activeSection, setActiveSection] = useState('technical')
+    useEffect(() => {
+        if(interviewId){
+            getReportById(interviewId);
+        }
+    },[interviewId]);
+    if(loading || !report){
+        return(<main className='loading-screen'>
+            <h1>Loading Your Interview Plan</h1>
+        </main>)
+    }
+    const sections = [
+        { id: 'technical', label: 'Technical Questions', eyebrow: `${report?.technicalQuestion?.length} Technical Questions` },
+        { id: 'behavioral', label: 'Behavioral Questions', eyebrow: `${report?.behavioralQuestion?.length} Behavioral Questions` },
+        { id: 'roadmap', label: 'Preparation Roadmap', eyebrow: `${report?.preparationPlan?.length} Day Plan` },
+    ]
     const currentSection = sections.find((section) => section.id === activeSection)
-    const {report} = useInterview();
 
     return (
         <main className="interview-report">

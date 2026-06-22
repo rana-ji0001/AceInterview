@@ -1,7 +1,7 @@
 import { useInterview } from '../hooks/useInterview'
 import '../style/home.scss'
-import { useState, useRef} from 'react'
-import {useNavigate} from 'react-router'
+import { useState, useRef } from 'react'
+import { useNavigate } from 'react-router'
 
 const DocumentIcon = () => (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -26,20 +26,20 @@ const PeopleIcon = () => (
 )
 
 const Home = () => {
-    const {loading, generateReport} = useInterview();
+    const { loading, generateReport, reports } = useInterview();
     const [jobDescription, setJobDescription] = useState("");
     const [selfDescription, setSelfDescription] = useState("");
     const resumeInputRef = useRef();
     const navigate = useNavigate();
 
-    const handleGenerateReport = async() => {
+    const handleGenerateReport = async () => {
         const resumeFile = resumeInputRef.current.files[0];
         const data = await generateReport({ jobDescription, selfDescription, resumeFile });
         console.log(data)
         navigate(`/interview/${data._id}`)
 
     }
-    if(loading){
+    if (loading) {
         return (<main className="loading-screen"><h1>Loading Your Interview Plan...</h1></main>)
     }
 
@@ -61,7 +61,7 @@ const Home = () => {
 
                 <section className="hero">
                     <p className="hero__eyebrow">AI-powered interview preparation</p>
-                    <h1>Accelerate your career with<br />technical precision.</h1>
+                    <h1>Ace Every Interview.</h1>
                     <p className="hero__copy">
                         Input your target job details and background to generate a custom-engineered
                         interview strategy and preparation roadmap.
@@ -77,7 +77,7 @@ const Home = () => {
                             <span className="required-badge">Required</span>
                         </div>
                         <textarea
-                            onChange={(e) => {setJobDescription(e.target.value)}}
+                            onChange={(e) => { setJobDescription(e.target.value) }}
                             id="jobDescription"
                             name="jobDescription"
                             placeholder="Paste the full job description here... (Responsibilities, Requirements, Tech Stack)"
@@ -105,10 +105,10 @@ const Home = () => {
                                 </label>
                             </div>
                             <textarea
-                                onChange={(e) => {setSelfDescription(e.target.value)}}
+                                onChange={(e) => { setSelfDescription(e.target.value) }}
                                 id="selfDescription"
                                 name="selfDescription"
-                                placeholder="Add extra context: specific accomplishments, target salary range, or areas you want to highlight..."
+                                placeholder="Share your skills, experience, and goals..."
                             />
                         </section>
 
@@ -136,6 +136,72 @@ const Home = () => {
                     </button>
                 </form>
             </div>
+            {reports?.length > 0 && (
+                <section className="recent-reports">
+                    <div className="recent-reports__header">
+                        <p className="recent-reports__eyebrow">
+                            Previously Generated Reports
+                        </p>
+
+                        <h2>My Interview Strategies</h2>
+                    </div>
+
+                    <div className="reports-grid">
+                        {reports.map((report) => (
+                            <article
+                                key={report._id}
+                                className="report-card"
+                                onClick={() => navigate(`/interview/${report._id}`)}
+                            >
+                                <div className="report-card__badge">
+                                    Interview Report
+                                </div>
+
+                                <h3>
+                                    {report.title ||
+                                        report.jobDescription?.split("\n")[0] ||
+                                        "Software Developer Position"}
+                                </h3>
+                                <div className="report-card__match">
+                                    <span className="report-card__score">
+                                        {report.matchScore}%
+                                    </span>
+
+                                    <span
+                                        className={`report-card__level ${report.matchScore >= 80
+                                                ? "high"
+                                                : report.matchScore >= 50
+                                                    ? "medium"
+                                                    : "low"
+                                            }`}
+                                    >
+                                        {report.matchScore >= 80
+                                            ? "High Match"
+                                            : report.matchScore >= 50
+                                                ? "Medium Match"
+                                                : "Low Match"}
+                                    </span>
+                                </div>
+
+                                <p className="report-card__description">
+                                    Click to review your personalized interview strategy,
+                                    questions and preparation roadmap.
+                                </p>
+
+                                <div className="report-card__footer">
+                                    <span>
+                                        {new Date(
+                                            report.createdAt
+                                        ).toLocaleDateString()}
+                                    </span>
+
+                                    <span>→</span>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             <footer className="home-footer">
                 <div className="home-footer__inner">

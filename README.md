@@ -90,7 +90,7 @@ project-root/
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/rana-ji0001/CognitiveEdge>
 cd project-root
 ```
 
